@@ -1,0 +1,83 @@
+﻿@using avaliacao.Models
+@model Cliente
+@{
+    ViewData["Title"] = "Editar";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Editar Cliente</h2>
+        @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(h => h.Id)
+        @Html.HiddenFor(h => h.SLARespostaTempo)
+        <center>
+            @Html.Raw(ViewBag.retorno)
+        </center>
+
+        <div class="row">
+            <div class="col-md-6 form-group" ´>
+                <input asp-for="CpfCnpj" class="form-control" placeholder="Documento" />
+                <span asp-validation-for="CpfCnpj" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="RazaoSocialNome" class="form-control" placeholder="Razão Social ou nome" />
+                <span asp-validation-for="RazaoSocialNome" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="CEP" class="form-control" placeholder="CEP" />
+                <span asp-validation-for="CEP" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="Logradouro" class="form-control" placeholder="Logradouro" />
+                <span asp-validation-for="Logradouro" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="LogradouroNumero" class="form-control" placeholder="Número" />
+                <span asp-validation-for="LogradouroNumero" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="LogradouroComplemento" class="form-control" placeholder="Complemento" />
+                <span asp-validation-for="LogradouroComplemento" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="LogradouroBairro" class="form-control" placeholder="Bairro" />
+                <span asp-validation-for="LogradouroBairro" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="LogradouroCidade" class="form-control" placeholder="Cidade" />
+                <span asp-validation-for="LogradouroCidade" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="LogradouroUF" class="form-control" placeholder="UF" />
+                <span asp-validation-for="LogradouroUF" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-6 form-group">
+                <input asp-for="Telefone" class="form-control" placeholder="Telefone" />
+                <span asp-validation-for="Telefone" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-12 form-group">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <a href="@Url.Action("Index","Home")" class="btn btn-default">Voltar</a>
+            </div>
+        </div>
+}
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/jquery.maskedinput.js" type="text/javascript"></script>
+    <script>$(document).ready(function () {
+            $("#Telefone").mask("(99) 9999-9999?9")
+            $("#CEP").mask("99999-999")
+        })</script>
+
+}

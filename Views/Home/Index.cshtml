@@ -1,0 +1,319 @@
+﻿@using avaliacao.Models
+@model IEnumerable<Chamados>
+@{
+    ViewData["Title"] = "Lista";
+}
+<link rel="stylesheet" href="~/DataTables/datatables.min.css"  />
+<div class="row">
+     <div class="col-md-12 col-sm-12 col-lg-12">
+         <center>
+             <h2>Clietes com chamados abertos</h2>
+         </center>
+     </div>
+    <div class="col-md-12 col-sm-12 col-lg-12">
+        <div class="table-responsive">
+            <table class="table" id="dataTable">
+                   <thead>
+                       <tr>
+                           <th></th>
+                           <th>CNPJ/CPF</th>
+                           <th>Cliente</th>
+                           <th>Telefone</th>
+                           <th>CEP</th>
+                           <th>Logradouro</th>
+                           <th>Cidade</th>
+                           <th>Chamado Aberto</th>
+                           <th>Detalhes</th>
+                       </tr>
+                   </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (Chamados chamado in Model)
+                            {
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="chamadoItem" data-id="@chamado.Id" />
+                            </td>
+                            <td>@chamado.cliente.CpfCnpj</td>
+                            <td>@chamado.cliente.RazaoSocialNome</td>
+                            <td>@chamado.cliente.Telefone</td>
+                            <td>@chamado.cliente.CEP</td>
+                            <td>@chamado.cliente.Logradouro</td>
+                            <td>@chamado.cliente.LogradouroCidade</td>
+                            <td>@(chamado.Fechado == false ? Html.Raw("Sim") : Html.Raw("Não"))</td>
+                            <td>
+                                <buttom class="btn btn-info" id="verCliente" onClick="verCliente(@chamado.cliente.Id)">
+                                    <i class="fas fa-search"></i>
+                                    Visualizar
+                                </buttom>
+                                @if(User.Identity.IsAuthenticated){
+                                    <buttom class="btn btn-success" onclick="novoChamado(@chamado.cliente.Id)">
+                                        <i class="fas fa-plus"></i>
+                                        Novo Chamado
+                                    </buttom>
+                                    <a href="@Url.Action("Edit","Client", new {Id = chamado.cliente.Id})" class="btn btn-default">
+                                        <i class="fas fa-file"></i>
+                                        Editar Cliente
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                            }
+                        } else
+                        {
+                            <tr>
+                                <td colspan="8">
+                                    Nenhum chamado foi aberto ainda!
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="@Url.Action("Create", "Client")" class="btn btn-info">
+                                    <i class="fas fa-plus"></i>
+                                    Novo Cliente
+                                </a>
+                                <buttom id="chamadoAdd" data-toggle="modal" data-target="#NovoChamado" class="btn btn-default">
+                                    <i class="fas fa-plus"></i>
+                                    Novo Chamado
+                                </buttom>
+                                <buttom id="chamadoClose" class="btn btn-danger" data-toggle="modal" data-target="#FecharChamado">
+                                    <i class="fas fa-times"></i>
+                                    Fechar Chamado
+                                </buttom>
+                            } else
+                            {
+                                <strong>Realize o login para acessar as opções!</strong>
+                            }    
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div> 
+    </div>
+</div>
+
+<div class="modal fade" id="NovoChamado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Novo Chamado</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">Selecione o Cliente:</label>
+                        <select name="Cliente" class="form-control" id="Cliente">
+                            <option value="">Selecione</option>
+                            @foreach (var cliente in ViewBag.Clientes){
+                                <option value="@cliente.Id">@cliente.RazaoSocialNome</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="abrir" class="btn btn-primary">Abrir chamado</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="FecharChamado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Você deseja mesmo encerrar este chamado?</h4>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="fechar" class="btn btn-primary">Fechar chamado</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="infoCliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >Detalhes do Cliente</h4>
+            </div>
+             <div class="modal-body">
+             <div class="form-group">
+                 <span>Documento: </span>
+                 <label for="recipient-name" class="control-label" id="documento"></label>
+             </div>
+             <div class="form-group">
+                 <span>Nome: </span>
+                 <label for="recipient-name" class="control-label" id="sla"></label>
+             </div>
+             <div class="form-group">
+                 <span>Documento: </span>
+                 <label for="recipient-name" class="control-label" id="nome"></label>
+             </div>
+             <div class="form-group">
+                 <span>CEP: </span>
+                 <label for="recipient-name" class="control-label" id="cep"></label>
+             </div>
+             <div class="form-group">
+                 <span>Logradouro: </span>
+                 <label for="recipient-name" class="control-label" id="logradouro"></label>
+             </div>
+             <div class="form-group">
+                 <span>Número: </span>
+                 <label for="recipient-name" class="control-label" id="numero"></label>
+             </div>
+             <div class="form-group">
+                 <span>Bairro: </span>
+                 <label for="recipient-name" class="control-label" id="bairro"></label>
+             </div>
+             <div class="form-group">
+                 <span>Complemnto: </span>
+                 <label for="recipient-name" class="control-label" id="complemento"></label>
+             </div>
+             <div class="form-group">
+                 <span>Cidade: </span>
+                 <label for="recipient-name" class="control-label" id="cidade"></label>
+             </div>
+             <div class="form-group">
+                 <span>Estado: </span>
+                 <label for="recipient-name" class="control-label" id="estado"></label>
+             </div>
+             <div class="form-group">
+                 <span>Telefone: </span>
+                 <label for="recipient-name" class="control-label" id="telefone"></label>
+             </div>
+                 </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/DataTables/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#dataTable").DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel'
+                ]   
+            });
+        })
+
+        $("#abrir").click(function(){
+            var cliente = $("#Cliente").val()
+            console.log("cliente =>", cliente)
+            $.ajax({
+                url: '@Url.Action("Abrir","Home")',
+                type: "post",
+                data: JSON.stringify(cliente),
+                dataType: "json",
+                contentType:'application/json',
+                success: function(success) {
+                    console.log("data => ", success)
+                    alert("Chamado Aberto!")
+                },
+                error: function(erro){
+                    console.log("erro => ", erro)
+                    alert(erro.erro)
+                }
+            })
+        })
+
+
+        $("#fechar").click(function(){
+            var checks = $(".chamadoItem");
+            for(var i =0;i < checks.length;i++){
+                if(checks[i].checked == true){
+                    console.log("checkboxs => ", checks[i].attributes[2].nodeValue)
+                    var chamadoId = checks[i].attributes[2].nodeValue;
+                    $.ajax({
+                        url: '@Url.Action("Fechar","Home")',
+                        type: 'post',
+                        data: JSON.stringify(chamadoId),
+                        dataType: "json",
+                        contentType:'application/json',
+                        success: function(success) {
+                            console.log("data => ", success)
+                            alert("Chamado fechado!")
+                        },
+                        error: function(erro){
+                            alert(erro.erro)
+
+                        }
+
+                    })
+                }
+            }
+        })
+
+
+        function verCliente(id){
+            var clientId = id
+
+            $.ajax({
+                url: '@Url.Action("ClientDetails", "Client")',
+                type: "post",
+                data: JSON.stringify(clientId),
+                dataType: "json",
+                contentType:'application/json',
+                success: function(data) {
+                    console.log("data => ", data)
+
+                    $("#documento").text(data.cliente.cpfCnpj)
+                    $("#sla").text(data.cliente.slaRespostaTempo)
+                    $("#nome").text(data.cliente.razaoSocialNome)
+                    $("#cep").text(data.cliente.cep)
+                    $("#logradouro").text(data.cliente.logradouro)
+                    $("#numero").text(data.cliente.logradouroNumero)
+                    $("#bairro").text(data.cliente.logradouroBairro)
+                     $("#cidade").text(data.cliente.logradouroCidade)
+                    $("#estado").text(data.cliente.logradouroUF)
+                    $("#telefone").text(data.cliente.telefone)
+                    $("#complemento").text(data.cliente.logradouroComplemento)
+
+                    $("#infoCliente").modal("show")
+                }
+
+            })
+
+        }
+
+
+        function novoChamado(id){
+            var cliente = id
+            $.ajax({
+                url: '@Url.Action("Abrir","Home")',
+                type: "post",
+                data: JSON.stringify(cliente),
+                dataType: "json",
+                contentType:'application/json',
+                success: function(success) {
+                    console.log("data => ", success)
+                    alert("Chamado Aberto!")
+                },
+                error: function(erro){
+                    console.log("erro => ", erro)
+                    alert(erro.erro)
+                }
+            })
+        }
+
+    </script> 
+}

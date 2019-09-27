@@ -1,0 +1,44 @@
+﻿<Properties StartupConfiguration="{BA691627-9CBB-4702-ABD6-9014A76DD595}|Default">
+  <MonoDevelop.Ide.ItemProperties.avaliacao PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="README.md">
+    <Files>
+      <File FileName="Controllers/HomeController.cs" Line="37" Column="1" />
+      <File FileName="services/ChamadosService.cs" />
+      <File FileName="Controllers/ClientController.cs" />
+      <File FileName="Views/Client/Create.cshtml" />
+      <File FileName="Views/Client/Edit.cshtml" />
+      <File FileName="Views/Home/Index.cshtml" Line="6" Column="57" />
+      <File FileName="README.md" Line="4" Column="40" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="avaliacao" expanded="True">
+            <Node name="avaliacao" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="services" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="Client" expanded="True" />
+                <Node name="Home" expanded="True" />
+              </Node>
+              <Node name="wwwroot" expanded="True">
+                <Node name="DataTables" expanded="True">
+                  <Node name="DataTables-1.10.18" expanded="True" />
+                </Node>
+                <Node name="js" expanded="True" />
+              </Node>
+              <Node name="README.md" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
