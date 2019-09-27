@@ -65,3 +65,4 @@ C:/Users/Biah/Documents/projeto/avaliacao/obj/Debug/netcoreapp2.1/UserSecretsAss
 /Users/macmini/Documents/avaliacao/obj/Debug/netcoreapp2.1/avaliacao.Views.pdb
 /Users/macmini/Documents/avaliacao/obj/Debug/netcoreapp2.1/avaliacao.csproj.CopyComplete
 /Users/macmini/Documents/avaliacao/obj/Debug/netcoreapp2.1/Razor/Views/Client/Edit.g.cshtml.cs
+/Users/macmini/Documents/avaliacao/bin/Debug/netcoreapp2.1/app.db
